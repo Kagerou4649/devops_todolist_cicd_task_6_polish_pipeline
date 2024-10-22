@@ -12,14 +12,9 @@ on:
    inputs:
      artifact_choice:
       description: 'Choosing the artifact to deploy'
-      default: 'ubuntu-latest-3.9'
       required: true
       type: choice
-      options:
-        - ubuntu-latest-3.8
-        - ubuntu-latest-3.9
-        - windows-latest-3.8
-        - windows-latest-3.9
+      options: [ubuntu-latest, windows-latest]
 
 #Adding concurrency
 concurrency:
