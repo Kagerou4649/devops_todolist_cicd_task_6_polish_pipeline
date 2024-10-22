@@ -106,7 +106,7 @@ jobs:
     - uses: actions/download-artifact@v4
       name: Download python artifacts
       with:
-        name: python-artifacts-${{ github.event.inputs.artifact_choice }}
+        name: python-artifacts-${{ github.event.inputs.artifact_choice }}-${{ github.event.inputs.PythonVersion }}
         path: .
 
     - name: Login to Docker Hub
@@ -130,8 +130,9 @@ jobs:
     steps:
 
     - uses: actions/download-artifact@v4
+      name: Download helm artifacts
       with:
-        name: helm-artifacts-${{ github.event.inputs.artifact_choice }}
+        name: helm-artifacts-${{ github.event.inputs.artifact_choice }}-${{ github.event.inputs.PythonVersion }}
         path: .
 
     - name: Set Up Helm
