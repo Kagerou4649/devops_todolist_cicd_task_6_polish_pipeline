@@ -12,10 +12,10 @@ on:
    inputs:
      artifact_choice:
       description: 'Choosing the artifact to deploy'
+      default: 'ubuntu-latest-3.9'
       required: true
-      default: 'windows-latest-3.9'
       type: choice
-      options: ['ubuntu-latest-3.8', 'ubuntu-latest-3.9', 'windows-latest-3.8', 'windows-latest-3.9']
+      options: ['windows-latest-3.8', 'windows-latest-3.9', 'ubuntu-latest-3.8', 'ubuntu-latest-3.9']
 
 #Adding concurrency
 concurrency:
@@ -75,21 +75,21 @@ jobs:
         if: github.ref_name == 'main'
         uses: actions/upload-artifact@v4
         with:
-          name: python-artifacts
+          name: python-artifacts-${{ matrix.OsType }}-${{ matrix.PythonVersion }}
           path: .
 
       - name: Upload helm artifacts
         if: github.ref_name == 'main'
         uses: actions/upload-artifact@v4
         with:
-          name: helm-artifacts
+          name: helm-artifacts-${{ matrix.OsType }}-${{ matrix.PythonVersion }}
           path: ${{ github.workspace }}/helm-charts
 
       - name: Upload kind cluster artifact
         if: github.ref_name == 'main'
         uses: actions/upload-artifact@v4
         with:
-          name: kind-cluster
+          name: kind-cluster-${{ matrix.OsType }}-${{ matrix.PythonVersion }}
           path: ${{ github.workspace }}/cluster.yml
 
   docker-ci:
@@ -102,7 +102,7 @@ jobs:
     - uses: actions/download-artifact@v4
       name: Download python artifacts
       with:
-        name: python-artifacts-${{ github.event_name == 'workflow_dispatch' && github.event.inputs.artifact_choice || 'default-artifact' }}
+        name: python-artifacts-${{ github.event.inputs.artifact_choice }}
         path: .
 
     - name: Login to Docker Hub
@@ -127,7 +127,7 @@ jobs:
 
     - uses: actions/download-artifact@v4
       with:
-        name: helm-artifacts-${{ github.event_name == 'workflow_dispatch' && github.event.inputs.artifact_choice || 'default-artifact' }}
+        name: helm-artifacts-${{ github.event.inputs.artifact_choice }}
         path: .
 
     - name: Set Up Helm
@@ -156,7 +156,7 @@ jobs:
     with:
       environment: development
       version: ${{ github.sha }}
-      artifact-choice: ${{ github.event.inputs.artifact_choice }}
+      artifact_choice: ${{ github.event.inputs.artifact_choice }}
 
   deploy-helm-stg:
     name: Deploy helm to Staging
@@ -168,4 +168,4 @@ jobs:
       version: ${{ github.sha }}
       helm-values-path: ./todoapp/values/stg.yaml
       helm-release-name: todoapp-staging
-      artifact-choice: ${{ github.event.inputs.artifact_choice }}
+      artifact_choice: ${{ github.event.inputs.artifact_choice }}
