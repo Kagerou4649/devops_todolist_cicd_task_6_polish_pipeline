@@ -10,7 +10,7 @@ on:
 #Adding inputs
   workflow_dispatch:
    inputs:
-     environment:
+     artifact_choice:
       description: 'Choosing the artifact to deploy'
       required: true
       default: 'windows-latest-3.9'
