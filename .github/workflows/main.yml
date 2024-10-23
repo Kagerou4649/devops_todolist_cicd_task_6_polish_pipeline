@@ -169,3 +169,4 @@ jobs:
       helm-values-path: ./todoapp/values/stg.yaml
       helm-release-name: todoapp-staging
       artifact_choice: ${{ github.event.inputs.artifact_choice || 'ubuntu-latest-3.8' }}
+      # Pods in kubernetes fixed
